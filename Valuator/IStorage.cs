@@ -1,6 +1,4 @@
 using System.Collections.Generic;
-using StackExchange.Redis;
-
 namespace Valuator
 {
     public interface IStorage
