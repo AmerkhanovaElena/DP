@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using StackExchange.Redis;
 
 namespace Valuator.Pages
 {
@@ -26,8 +27,9 @@ namespace Valuator.Pages
         {
             _logger.LogDebug(id);
 
-            Rank = Convert.ToDouble(_storage.Load("RANK-" + id));
+            string rankKey = "RANK-" + id;
             Similarity = Convert.ToDouble(_storage.Load("SIMILARITY-" + id));
+            Rank = Convert.ToDouble(_storage.Load(rankKey));
         }
     }
 }

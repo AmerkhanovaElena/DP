@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using StackExchange.Redis;
+using NATS.Client;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Valuator.Pages
 {
@@ -31,27 +34,36 @@ namespace Valuator.Pages
 
             string id = Guid.NewGuid().ToString();
 
-            string rankKey = "RANK-" + id;
-            _storage.Store(rankKey, GetRank(text).ToString());
-
             string similarityKey = "SIMILARITY-" + id;
             var similarity = GetSimilarity(text);
             _storage.Store(similarityKey, similarity.ToString());
 
-            if (similarity == 0)
-            {
-                string textKey = "TEXT-" + id;
-                _storage.Store(textKey, text);
-            }
+            string textKey = "TEXT-" + id;
+            _storage.Store(textKey, text);
+
+            GetAndStoreRank(id);
 
             return Redirect($"summary?id={id}");
         }
 
-        private double GetRank(string text)
+        private async void GetAndStoreRank(string id)
         {
-            int lettersCount = text.Count(char.IsLetter);
+            CancellationTokenSource ct = new CancellationTokenSource();
 
-            return Math.Round(((text.Length - lettersCount) / (double)text.Length), 2);
+            ConnectionFactory cf = new ConnectionFactory();
+
+            using (IConnection c = cf.CreateConnection())
+            {
+                if (!ct.IsCancellationRequested)
+                {
+                    byte[] data = Encoding.UTF8.GetBytes(id);
+                    c.Publish("valuator.processing.rank", data);
+                    await Task.Delay(1000);
+                }
+
+                c.Drain();
+                c.Close();
+            }
         }
 
         private int GetSimilarity(string text)
