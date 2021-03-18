@@ -3,8 +3,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Text;
 using System.Linq;
-using System.Threading.Tasks;
-using Valuator;
+using StorageLibrary;
 
 namespace RankCalculator
 {

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
-namespace Valuator
+
+namespace StorageLibrary
 {
     public interface IStorage
     {

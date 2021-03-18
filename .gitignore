@@ -351,3 +351,31 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
+nginx/conf/fastcgi.conf
+nginx/conf/fastcgi_params
+nginx/conf/koi-utf
+nginx/conf/koi-win
+nginx/conf/mime.types
+nginx/conf/scgi_params
+nginx/conf/uwsgi_params
+nginx/conf/win-utf
+nginx/conf/Новая папка/nginx.conf
+nginx/contrib/geo2nginx.pl
+nginx/contrib/README
+nginx/contrib/unicode2nginx/koi-utf
+nginx/contrib/unicode2nginx/unicode-to-nginx.pl
+nginx/contrib/unicode2nginx/win-utf
+nginx/contrib/vim/ftdetect/nginx.vim
+nginx/contrib/vim/ftplugin/nginx.vim
+nginx/contrib/vim/indent/nginx.vim
+nginx/contrib/vim/syntax/nginx.vim
+nginx/docs/CHANGES
+nginx/docs/CHANGES.ru
+nginx/docs/LICENSE
+nginx/docs/OpenSSL.LICENSE
+nginx/docs/README
+nginx/docs/PCRE.LICENCE
+nginx/docs/zlib.LICENSE
+nginx/html/50x.html
+nginx/html/index.html
+nginx/nginx.exe

@@ -13,8 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\Valuator\IStorage.cs" />
-    <Compile Include="..\Valuator\RedisStorage.cs" />
+    <ProjectReference Include="..\StorageLibrary\StorageLibrary.csproj" />
   </ItemGroup>
   
 </Project>

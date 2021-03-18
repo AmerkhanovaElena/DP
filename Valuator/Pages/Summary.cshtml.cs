@@ -5,7 +5,7 @@ using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using StackExchange.Redis;
+using StorageLibrary;
 
 namespace Valuator.Pages
 {
