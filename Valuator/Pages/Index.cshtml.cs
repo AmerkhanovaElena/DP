@@ -48,18 +48,13 @@ namespace Valuator.Pages
 
         private async void GetAndStoreRank(string id)
         {
-            CancellationTokenSource ct = new CancellationTokenSource();
-
             ConnectionFactory cf = new ConnectionFactory();
 
             using (IConnection c = cf.CreateConnection())
             {
-                if (!ct.IsCancellationRequested)
-                {
-                    byte[] data = Encoding.UTF8.GetBytes(id);
-                    c.Publish("valuator.processing.rank", data);
-                    await Task.Delay(1000);
-                }
+                byte[] data = Encoding.UTF8.GetBytes(id);
+                c.Publish("valuator.processing.rank", data);
+                await Task.Delay(1000);
 
                 c.Drain();
                 c.Close();
