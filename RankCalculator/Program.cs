@@ -4,6 +4,7 @@ using System;
 using System.Text;
 using System.Linq;
 using StorageLibrary;
+using System.Threading.Tasks;
 
 namespace RankCalculator
 {
@@ -32,7 +33,9 @@ namespace RankCalculator
                 string rankKey = "RANK-" + id;
                 double rank = GetRank(text);
                 storage.Store(rankKey, GetRank(text).ToString());
+
                 logger.LogDebug("Ranked {0} text {1}", rank, text);
+                PublishRankMessage(id, rank);
             });
 
             s.Start();
@@ -52,6 +55,22 @@ namespace RankCalculator
             int nonLettersCount = text.Length - lettersCount;
 
             return Math.Round((nonLettersCount / (double)text.Length), 2);
+        }
+
+        private static async void PublishRankMessage(string id, double rank)
+        {
+            ConnectionFactory cf = new ConnectionFactory();
+
+            using (IConnection c = cf.CreateConnection())
+            {
+                string string_data = rank.ToString() + " " + id;
+                byte[] data = Encoding.UTF8.GetBytes(string_data);
+                c.Publish("rankCalculator.calculated.rank", data);
+                await Task.Delay(1000);
+
+                c.Drain();
+                c.Close();
+            }
         }
     }
 }

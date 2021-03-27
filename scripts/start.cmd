@@ -8,3 +8,7 @@ start nginx.exe
 cd ..\RankCalculator\
 start "consumer 1" dotnet run
 start "consumer 2" dotnet run
+
+cd ..\EventsLogger\
+start "logger 1" dotnet run
+start "logger 2" dotnet run

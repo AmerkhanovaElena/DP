@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 using NATS.Client;
-using System.Threading;
 using System.Threading.Tasks;
 using StorageLibrary;
 
@@ -35,33 +32,20 @@ namespace Valuator.Pages
             string id = Guid.NewGuid().ToString();
 
             string similarityKey = "SIMILARITY-" + id;
-            var similarity = GetSimilarity(text);
+            var similarity = GetSimilarity(id, text);
             _storage.Store(similarityKey, similarity.ToString());
+            string string_data = similarity.ToString() + " " + id;
+            PublishMessageOnSubject("valuator.calculated.similarity", string_data);
 
             string textKey = "TEXT-" + id;
             _storage.Store(textKey, text);
 
-            GetAndStoreRank(id);
+            PublishMessageOnSubject("valuator.processing.rank", id);
 
             return Redirect($"summary?id={id}");
         }
 
-        private async void GetAndStoreRank(string id)
-        {
-            ConnectionFactory cf = new ConnectionFactory();
-
-            using (IConnection c = cf.CreateConnection())
-            {
-                byte[] data = Encoding.UTF8.GetBytes(id);
-                c.Publish("valuator.processing.rank", data);
-                await Task.Delay(1000);
-
-                c.Drain();
-                c.Close();
-            }
-        }
-
-        private int GetSimilarity(string text)
+        private int GetSimilarity(string id, string text)
         {
             var keys = _storage.GetTextKeys();
             foreach (var key in keys)
@@ -73,6 +57,21 @@ namespace Valuator.Pages
             }
 
             return 0;
+        }
+
+        private async void PublishMessageOnSubject(string subject, string string_data)
+        {
+            ConnectionFactory cf = new ConnectionFactory();
+
+            using (IConnection c = cf.CreateConnection())
+            {
+                byte[] data = Encoding.UTF8.GetBytes(string_data);
+                c.Publish(subject, data);
+                await Task.Delay(1000);
+
+                c.Drain();
+                c.Close();
+            }
         }
     }
 }
