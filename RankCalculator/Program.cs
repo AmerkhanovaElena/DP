@@ -57,7 +57,7 @@ namespace RankCalculator
             return Math.Round((nonLettersCount / (double)text.Length), 2);
         }
 
-        private static async void PublishRankMessage(string id, double rank)
+        private static void PublishRankMessage(string id, double rank)
         {
             ConnectionFactory cf = new ConnectionFactory();
 
@@ -66,7 +66,6 @@ namespace RankCalculator
                 string string_data = rank.ToString() + " " + id;
                 byte[] data = Encoding.UTF8.GetBytes(string_data);
                 c.Publish("rankCalculator.calculated.rank", data);
-                await Task.Delay(1000);
 
                 c.Drain();
                 c.Close();

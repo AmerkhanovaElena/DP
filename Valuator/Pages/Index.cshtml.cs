@@ -59,7 +59,7 @@ namespace Valuator.Pages
             return 0;
         }
 
-        private async void PublishMessageOnSubject(string subject, string string_data)
+        private void PublishMessageOnSubject(string subject, string string_data)
         {
             ConnectionFactory cf = new ConnectionFactory();
 
@@ -67,7 +67,6 @@ namespace Valuator.Pages
             {
                 byte[] data = Encoding.UTF8.GetBytes(string_data);
                 c.Publish(subject, data);
-                await Task.Delay(1000);
 
                 c.Drain();
                 c.Close();
