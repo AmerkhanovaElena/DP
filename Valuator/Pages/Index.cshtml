@@ -3,12 +3,22 @@
 @{
     ViewData["Title"] = "Home page";
 }
+@using StorageLibrary
 
 <div class="text-center">
     <form method="post">
         <div class="col-2">Текст для оценки:</div>
         <div class="col-10">
             <textarea name="text" rows="5" cols="50"></textarea>
+        </div>
+        <div class="col-10">
+            <select name="shardKey">
+                <option value=@Constants.RUS_SHARD>Russia</option>
+                <option value=@Constants.EU_SHARD>France</option>
+                <option value=@Constants.EU_SHARD>Germany</option>
+                <option value=@Constants.OTHER_SHARD>USA</option>
+                <option value=@Constants.OTHER_SHARD>India</option>
+            </select>
             <input type="submit" />
         </div>
     </form>

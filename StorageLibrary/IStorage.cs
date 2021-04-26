@@ -4,8 +4,11 @@ namespace StorageLibrary
 {
     public interface IStorage
     {
-        void Store(string key, string value);
-        string Load(string key);
-        List<string> GetTextKeys();
+        void StoreToShard(string key, string value, string shardKey);
+        string LoadFromShard(string key, string shardKey);
+
+        void StoreShardKeyToMap(string id, string shardKey);
+        string GetShardKeyFromMap(string id);
+        bool IsDuplicate(string text);
     }
 }

@@ -27,12 +27,15 @@ namespace RankCalculator
             {
                 string id = Encoding.UTF8.GetString(args.Message.Data);
 
-                string textKey = "TEXT-" + id;
-                string text = storage.Load(textKey);
+                string shardKey = storage.GetShardKeyFromMap(id);
+                logger.LogDebug("LOOKUP: {0}, {1}", id, shardKey);
+                
+                string textKey = Constants.TEXT_PREFIX + id;
+                string text = storage.LoadFromShard(textKey, shardKey);
 
-                string rankKey = "RANK-" + id;
+                string rankKey = Constants.RANK_PREFIX + id;
                 double rank = GetRank(text);
-                storage.Store(rankKey, GetRank(text).ToString());
+                storage.StoreToShard(rankKey, rank.ToString(), shardKey);
 
                 logger.LogDebug("Ranked {0} text {1}", rank, text);
                 PublishRankMessage(id, rank);
@@ -41,7 +44,7 @@ namespace RankCalculator
             s.Start();
 
             Console.WriteLine("Press Enter to exit");
-            Console.ReadLine();   
+            Console.ReadLine();
 
             s.Unsubscribe();
 

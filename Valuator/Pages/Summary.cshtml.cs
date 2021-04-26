@@ -27,9 +27,11 @@ namespace Valuator.Pages
         {
             _logger.LogDebug(id);
 
-            string rankKey = "RANK-" + id;
-            Similarity = Convert.ToDouble(_storage.Load("SIMILARITY-" + id));
-            Rank = Convert.ToDouble(_storage.Load(rankKey));
+            string shardKey = _storage.GetShardKeyFromMap(id);
+
+            string rankKey = Constants.RANK_PREFIX + id;
+            Similarity = Convert.ToDouble(_storage.LoadFromShard(Constants.SIMILARITY_PREFIX + id, shardKey));
+            Rank = Convert.ToDouble(_storage.LoadFromShard(rankKey, shardKey));
         }
     }
 }

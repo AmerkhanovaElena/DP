@@ -25,20 +25,20 @@ namespace Valuator.Pages
             
         }
 
-        public IActionResult OnPost(string text)
+        public IActionResult OnPost(string text, string shardKey)
         {
             _logger.LogDebug(text);
 
             string id = Guid.NewGuid().ToString();
-
-            string similarityKey = "SIMILARITY-" + id;
+            _storage.StoreShardKeyToMap(id, shardKey);
+            string similarityKey = Constants.SIMILARITY_PREFIX + id;
             var similarity = GetSimilarity(id, text);
-            _storage.Store(similarityKey, similarity.ToString());
+            _storage.StoreToShard(similarityKey, similarity.ToString(), shardKey);
             string string_data = similarity.ToString() + " " + id;
             PublishMessageOnSubject("valuator.calculated.similarity", string_data);
 
-            string textKey = "TEXT-" + id;
-            _storage.Store(textKey, text);
+            string textKey = Constants.TEXT_PREFIX + id;
+            _storage.StoreToShard(textKey, text, shardKey);
 
             PublishMessageOnSubject("valuator.processing.rank", id);
 
@@ -47,13 +47,9 @@ namespace Valuator.Pages
 
         private int GetSimilarity(string id, string text)
         {
-            var keys = _storage.GetTextKeys();
-            foreach (var key in keys)
+            if (_storage.IsDuplicate(text))
             {
-                if (text == _storage.Load(key))
-                {
-                    return 1;
-                }
+                return 1;
             }
 
             return 0;
