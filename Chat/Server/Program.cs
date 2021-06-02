@@ -54,9 +54,16 @@ namespace Server
                         }
                     }
 
+<<<<<<< Updated upstream
                     Console.WriteLine("Полученный текст: {0}", data);
 
                     history += data.Remove(data.Length - 5, 5) + "\n";
+=======
+                    data = data.Remove(data.Length - 5, 5);
+                    Console.WriteLine("Полученный текст: {0}", data);
+
+                    history += data + "\n";
+>>>>>>> Stashed changes
 
                     // Отправляем историю клиенту
                     byte[] msg = Encoding.UTF8.GetBytes(history + "<EOF>");
